@@ -1,8 +1,8 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import * as phonebooksOperations from '../../redux/phonebook/phonebook-operations';
 import s from './Contacts.module.css';
-import * as phonebookActions from '../../redux/phonebook/phonebook-actions';
 
 const getVisiblePhonbookList = (filter, items) => {
   const normolizedFilter = filter.toLowerCase();
@@ -15,12 +15,18 @@ const getVisiblePhonbookList = (filter, items) => {
 function ContactList() {
   const { item } = s;
 
-  const contacts = useSelector(state =>
-    getVisiblePhonbookList(state.contacts.filter, state.contacts.items),
-  );
   const dispatch = useDispatch();
 
-  const onDeleteContact = id => dispatch(phonebookActions.deleteContact(id));
+  useEffect(() => {
+    dispatch(phonebooksOperations.fetchPhonebooks());
+  }, [dispatch]);
+
+  const contacts = useSelector(state =>
+    getVisiblePhonbookList(state.contacts.filter, state.contacts.entities),
+  );
+
+  const onDeleteContact = id =>
+    dispatch(phonebooksOperations.deleteContacts(id));
 
   return (
     <ul>

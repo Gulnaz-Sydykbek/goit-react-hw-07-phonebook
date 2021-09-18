@@ -3,12 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import s from './Contacts.module.css';
-import * as phonebookActions from '../../redux/phonebook/phonebook-actions';
+import * as phonebooksOperations from '../../redux/phonebook/phonebook-operations';
 
 function ContactForm(props) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const contacts = useSelector(state => state.contacts.items);
+  const contacts = useSelector(state => state.contacts.entities);
   const dispatch = useDispatch();
 
   const handleChange = e => {
@@ -39,7 +39,8 @@ function ContactForm(props) {
     } else if (addSameNumber) {
       toast.error(`${number} is already in contacts`);
     } else {
-      dispatch(phonebookActions.addNewContact(name, number));
+      const phoneList = { name, number };
+      dispatch(phonebooksOperations.addContacts(phoneList));
     }
 
     setName('');

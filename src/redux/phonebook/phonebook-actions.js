@@ -24,17 +24,6 @@ export const changeFilter = value => ({
 
 //=============================================================
 
-import shortId from 'shortid';
 import { createAction } from '@reduxjs/toolkit';
-
-export const addNewContact = createAction('phonebook/Add', (name, number) => ({
-  payload: {
-    id: shortId.generate(),
-    name,
-    number,
-  },
-}));
-
-export const deleteContact = createAction('phonebook/Delete');
 
 export const changeFilter = createAction('phonebook/ChangeFilter');
