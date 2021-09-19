@@ -2,17 +2,16 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import s from './Contacts.module.css';
-import * as phonebookActions from '../../redux/phonebook/phonebook-actions';
+import { phonebookActions, phonebookSelector } from 'redux/phonebook';
 
 function Filter() {
-  const { label, input } = s;
-
-  const value = useSelector(state => state.contacts.filter);
-
+  const value = useSelector(phonebookSelector.getFilter);
   const dispatch = useDispatch();
 
   const onChangeFilter = e =>
     dispatch(phonebookActions.changeFilter(e.target.value));
+
+  const { label, input } = s;
 
   return (
     <label className={label}>

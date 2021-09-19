@@ -3,9 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import s from './Contacts.module.css';
-import * as phonebooksOperations from '../../redux/phonebook/phonebook-operations';
+import * as phonebooksOperations from 'redux/phonebook/phonebook-operations';
 
-function ContactForm(props) {
+function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
   const contacts = useSelector(state => state.contacts.entities);

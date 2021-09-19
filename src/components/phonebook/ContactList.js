@@ -1,45 +1,40 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import * as phonebooksOperations from '../../redux/phonebook/phonebook-operations';
+import { phonebookOperations, phonebookSelector } from 'redux/phonebook';
 import s from './Contacts.module.css';
 
-const getVisiblePhonbookList = (filter, items) => {
-  const normolizedFilter = filter.toLowerCase();
-
-  return items.filter(item =>
-    item.name.toLowerCase().includes(normolizedFilter),
-  );
-};
-
 function ContactList() {
-  const { item } = s;
-
+  const contacts = useSelector(phonebookSelector.getVisiblePhonbookList);
+  const loading = useSelector(phonebookSelector.getLoading);
+  const error = useSelector(phonebookSelector.getError);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(phonebooksOperations.fetchPhonebooks());
+    dispatch(phonebookOperations.fetchPhonebooks());
   }, [dispatch]);
 
-  const contacts = useSelector(state =>
-    getVisiblePhonbookList(state.contacts.filter, state.contacts.entities),
-  );
-
   const onDeleteContact = id =>
-    dispatch(phonebooksOperations.deleteContacts(id));
+    dispatch(phonebookOperations.deleteContacts(id));
+
+  const { item } = s;
 
   return (
     <ul>
-      {contacts.map(({ id, name, number }) => (
-        <li className={item} key={id}>
-          <span>
-            {name}: {number}
-          </span>
-          <button type="button" onClick={() => onDeleteContact(id)}>
-            Delete
-          </button>
-        </li>
-      ))}
+      {error && <h2>{error}</h2>}
+      {contacts.length > 0 &&
+        contacts.map(({ id, name, number }) => (
+          <li className={item} key={id}>
+            <span>
+              {name}: {number}
+            </span>
+            <button type="button" onClick={() => onDeleteContact(id)}>
+              Delete
+            </button>
+          </li>
+        ))}
+
+      {loading && <h2>Loading...</h2>}
     </ul>
   );
 }
