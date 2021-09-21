@@ -1,38 +1,31 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import * as phonebooksAPI from 'service/phonebooks-api';
+import axios from 'axios';
+import * as actions from './phonebook-actions';
 
-export const fetchPhonebooks = createAsyncThunk(
-  'contacts/fetchContacts',
-  async (_, { rejectWithValue }) => {
-    try {
-      const contacts = await phonebooksAPI.fetchContacts();
-      return contacts;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  },
-);
+axios.defaults.baseURL = 'http://localhost:3000';
 
-export const addContacts = createAsyncThunk(
-  'contacts/addContacts',
-  async (phoneList, { rejectWithValue }) => {
-    try {
-      const contacts = await phonebooksAPI.addContacts(phoneList);
-      return contacts;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  },
-);
+export const fetchPhonebooks = () => dispatch => {
+  dispatch(actions.fetchContactRequest());
 
-export const deleteContacts = createAsyncThunk(
-  'contacts/deleteContacts',
-  async (id, { rejectWithValue }) => {
-    try {
-      const contacts = await phonebooksAPI.deleteContacts(id);
-      return contacts;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  },
-);
+  axios
+    .get('/contacts')
+    .then(({ data }) => dispatch(actions.fetchContactSuccess(data)))
+    .catch(error => dispatch(actions.fetchContactError(error)));
+};
+
+export const addContacts = phoneList => dispatch => {
+  dispatch(actions.addContactRequest());
+
+  axios
+    .post('/contacts', phoneList)
+    .then(({ data }) => dispatch(actions.addContactSuccess(data)))
+    .catch(error => dispatch(actions.addContactError(error)));
+};
+
+export const deleteContacts = contactId => dispatch => {
+  dispatch(actions.deleteContactRequest());
+
+  axios
+    .delete(`./contacts/${contactId}`)
+    .then(() => dispatch(actions.deleteContactSuccess(contactId)))
+    .catch(error => dispatch(actions.deleteContactError(error)));
+};

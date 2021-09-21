@@ -31,7 +31,9 @@ function ContactForm() {
   const handleSubmit = e => {
     e.preventDefault();
 
-    const addSameName = contacts.map(({ name }) => name).includes(name);
+    const addSameName = contacts
+      .map(({ name }) => name.toLowerCase())
+      .includes(name.toLowerCase());
     const addSameNumber = contacts.map(({ number }) => number).includes(number);
 
     if (addSameName) {

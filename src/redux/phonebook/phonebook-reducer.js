@@ -1,15 +1,13 @@
 import { createReducer, combineReducers } from '@reduxjs/toolkit';
-import {
-  fetchPhonebooks,
-  addContacts,
-  deleteContacts,
-} from './phonebook-operations';
 import * as phonebookActions from './phonebook-actions';
 
 const entities = createReducer([], {
-  [fetchPhonebooks.fulfilled]: (_, { payload }) => payload,
-  [addContacts.fulfilled]: (state, { payload }) => [...state, payload],
-  [deleteContacts.fulfilled]: (state, { payload }) =>
+  [phonebookActions.fetchContactSuccess]: (_, { payload }) => payload,
+  [phonebookActions.addContactSuccess]: (state, { payload }) => [
+    ...state,
+    payload,
+  ],
+  [phonebookActions.deleteContactSuccess]: (state, { payload }) =>
     state.filter(({ id }) => id !== payload),
 });
 
@@ -18,28 +16,28 @@ const filter = createReducer('', {
 });
 
 const isLoading = createReducer(false, {
-  [fetchPhonebooks.pending]: () => true,
-  [fetchPhonebooks.fulfilled]: () => false,
-  [fetchPhonebooks.rejected]: () => false,
+  [phonebookActions.fetchContactRequest]: () => true,
+  [phonebookActions.fetchContactSuccess]: () => false,
+  [phonebookActions.fetchContactError]: () => false,
 
-  [addContacts.pending]: () => true,
-  [addContacts.fulfilled]: () => false,
-  [addContacts.rejected]: () => false,
+  [phonebookActions.addContactRequest]: () => true,
+  [phonebookActions.addContactSuccess]: () => false,
+  [phonebookActions.addContactError]: () => false,
 
-  [deleteContacts.pending]: () => true,
-  [deleteContacts.fulfilled]: () => false,
-  [deleteContacts.rejected]: () => false,
+  [phonebookActions.deleteContactRequest]: () => true,
+  [phonebookActions.deleteContactSuccess]: () => false,
+  [phonebookActions.deleteContactError]: () => false,
 });
 
 const error = createReducer(null, {
-  [fetchPhonebooks.rejected]: (_, { payload }) => payload,
-  [fetchPhonebooks.pending]: () => null,
+  [phonebookActions.fetchContactError]: (_, { payload }) => payload,
+  [phonebookActions.fetchContactRequest]: () => null,
 
-  [addContacts.rejected]: (_, { payload }) => payload,
-  [addContacts.pending]: () => null,
+  [phonebookActions.addContactError]: (_, { payload }) => payload,
+  [phonebookActions.addContactRequest]: () => null,
 
-  [deleteContacts.rejected]: (_, { payload }) => payload,
-  [deleteContacts.pending]: () => null,
+  [phonebookActions.deleteContactError]: (_, { payload }) => payload,
+  [phonebookActions.deleteContactRequest]: () => null,
 });
 
 const phonebookReduser = combineReducers({
